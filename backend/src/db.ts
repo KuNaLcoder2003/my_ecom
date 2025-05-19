@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 mongoose.connect('mongodb+srv://kunal:kunal@cluster0.acncl.mongodb.net/');
 
 
-const User = new mongoose.Schema({
+const User_schema = new mongoose.Schema({
     first_name: {
         type: String,
         required: true
@@ -22,7 +22,7 @@ const User = new mongoose.Schema({
     },
     avatar: {
         type: String,
-        required: true
+        required: false
     },
     role: {
         type: String,
@@ -30,7 +30,7 @@ const User = new mongoose.Schema({
     }
 }, { timestamps: true })
 
-const Product = new mongoose.Schema({
+const Product_Schema = new mongoose.Schema({
     product_name: {
         type: String,
         required: true
@@ -55,7 +55,7 @@ const Product = new mongoose.Schema({
     }]
 }, { timestamps: true })
 
-const Orders = new mongoose.Schema({
+const Orders_Schema = new mongoose.Schema({
     user_id: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'ecom_users_table'
@@ -76,7 +76,7 @@ const Orders = new mongoose.Schema({
     }
 }, { timestamps: true })
 
-const Cart = new mongoose.Schema({
+const Cart_Schema = new mongoose.Schema({
     checked_out: {
         type: Boolean,
         required: true
@@ -92,4 +92,11 @@ const Cart = new mongoose.Schema({
         required :  true
     }
 } , {timestamps : true})
+
+export const User = mongoose.model('ecom_users_table' , User_schema);
+export const Product = mongoose.model('ecom_products_table' , Product_Schema);
+export const Order = mongoose.model('ecom_orders_table' , Orders_Schema);
+export const Cart = mongoose.model('ecom_carts_table' , Cart_Schema);
+
+
 
