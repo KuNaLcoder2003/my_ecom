@@ -69,34 +69,38 @@ const Orders_Schema = new mongoose.Schema({
             type: mongoose.Schema.Types.ObjectId,
             ref: 'ecom_products_table'
         }
-    }] , 
-    amount : {
-        type : Number , 
-        required : true
+    }],
+    amount: {
+        type: Number,
+        required: true
     }
 }, { timestamps: true })
 
 const Cart_Schema = new mongoose.Schema({
+    user_id: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'ecom_users_table'
+    },
     checked_out: {
         type: Boolean,
-        required: true
+        required: false
     },
     products: [{
         product_id: {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'ecom_products_table'
         }
-    }] , 
-    amount : {
-        type : Number,
-        required :  true
+    }],
+    amount: {
+        type: Number,
+        required: true
     }
-} , {timestamps : true})
+}, { timestamps: true })
 
-export const User = mongoose.model('ecom_users_table' , User_schema);
-export const Product = mongoose.model('ecom_products_table' , Product_Schema);
-export const Order = mongoose.model('ecom_orders_table' , Orders_Schema);
-export const Cart = mongoose.model('ecom_carts_table' , Cart_Schema);
+export const User = mongoose.model('ecom_users_table', User_schema);
+export const Product = mongoose.model('ecom_products_table', Product_Schema);
+export const Order = mongoose.model('ecom_orders_table', Orders_Schema);
+export const Cart = mongoose.model('ecom_carts_table', Cart_Schema);
 
 
 
