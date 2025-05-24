@@ -1,1 +1,1 @@
-{"root":["./src/db.ts","./src/index.ts","./src/functions/generatetokens.ts","./src/routes/index.ts","./src/routes/user.ts"],"version":"5.8.3"}
+{"root":["./src/db.ts","./src/index.ts","./src/functions/cloudinary.ts","./src/functions/generatetokens.ts","./src/middlewares/isadmin.ts","./src/routes/cart.ts","./src/routes/index.ts","./src/routes/product.ts","./src/routes/user.ts"],"version":"5.8.3"}
