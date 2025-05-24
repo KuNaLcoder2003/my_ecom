@@ -89,6 +89,10 @@ const Cart_Schema = new mongoose.Schema({
         product_id: {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'ecom_products_table'
+        } , 
+        product_quantity : {
+            type : Number,
+            required : true
         }
     }],
     amount: {

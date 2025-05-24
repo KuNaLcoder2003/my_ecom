@@ -1,8 +1,13 @@
-import express, { Request, Response } from "express"
+import express, { json, Request, Response } from "express"
 import { generateToken } from "../functions/generateTokens";
+
 import { User } from "../db";
+import multer from "multer";
+import { uploadImage } from "../functions/cloudinary";
 const bcrypt = require('bcrypt')
 
+const storage = multer.memoryStorage();
+const upload = multer({storage : storage})
 enum Status {
     OK = 200,
     ERROR = 500,
@@ -20,15 +25,29 @@ interface NewUser {
     role? : string
 }
 
+interface Credentials {
+    email : string,
+    password : string
+}
+
 
 const userRouter = express.Router();
 
+const saltRounds = 10;
 
 
-userRouter.post('/signup', async (req: Request, res: Response) => {
+
+userRouter.post('/signup' , upload.single('avatar'), async (req: Request, res: Response) => {
 
     try {
         const newUser = req.body as NewUser;
+        if(!newUser.first_name ||  !newUser.last_name || !newUser.email || !newUser.password || !newUser.role){
+            res.status(400).json({
+                valid : false,
+                message : 'Empty feilds'
+            })
+            return
+        }
         const user = await User.findOne({ email: newUser.email })
         if (user) {
             res.status(Status.BAD_REQUEST).json({
@@ -37,10 +56,46 @@ userRouter.post('/signup', async (req: Request, res: Response) => {
             })
             return;
         }
-        
-        const new_user = await User.create(newUser);
 
-        const token = generateToken(new_user._id.toString())
+        const file = req.file as Express.Multer.File;
+        if(!file){
+
+            res.status(400).json({
+                message : 'Upload avatar',
+                valid : false
+            })
+            return
+        }
+
+        const bytes = file.buffer;
+        const buffer = Buffer.from(bytes);
+
+        const result = await uploadImage(buffer)
+
+        const hashed = bcrypt.hashSync(newUser.password , saltRounds)
+
+        if(result.err){
+            res.status(402).json({
+                valid : false,
+                message : 'Unable to upload image'
+            })
+            return
+        }
+
+        const {url} = result
+
+        // hash paswword
+        
+        const new_user = await User.create({
+            first_name : newUser.first_name,
+            last_name : newUser.last_name,
+            email : newUser.email,
+            password : hashed,
+            role : newUser.role,
+            avatar : url
+        });
+
+        const token = generateToken(new_user._id.toString() , new_user.role)
 
         if (!token.valid) {
             res.status(Status.UNAUTHORIZED).json({
@@ -58,6 +113,7 @@ userRouter.post('/signup', async (req: Request, res: Response) => {
 
 
     } catch (error) {
+        console.log(error);
         res.status(Status.ERROR).json({
             message: 'Something went wrong',
             error: error
@@ -67,8 +123,56 @@ userRouter.post('/signup', async (req: Request, res: Response) => {
 
 })
 
-userRouter.post('/signin', async () => {
+userRouter.post('/signin', async (req : Request , res : Response) => {
+    const userCred = req.body as Credentials
+    try {
+        if(!userCred.email || userCred.password){
+            res.status(400).json({
+                valid : false,
+                messsge : 'Please enter Email and Password'
+            })
+            return
+        }
 
+        const user = await User.findOne({email : userCred.email})
+
+        if(!user){
+            res.status(404).json({
+                valid : false,
+                message : 'User not found'
+            })
+            return
+        }
+        const matched = bcrypt.compareSync(userCred , user.password)
+
+        if(!matched) {
+            res.status(401).json({
+                message : 'Wrong password',
+                valid : true
+            })
+            return
+        }
+
+        const token = generateToken(user._id.toString() , user.role);
+        if(!token.valid) {
+            res.status(400).json({
+                valid : false,
+                message : "Error : " + token.error
+            })
+        }
+
+        res.status(200).json({
+            valid :true,
+            token : token,
+            user : user
+        })
+    } catch (error) {
+        console.log(error);
+        res.status(Status.ERROR).json({
+            message: 'Something went wrong',
+            error: error
+        })
+    }
 })
 
 

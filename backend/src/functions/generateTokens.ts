@@ -4,9 +4,8 @@
 
 const jwt = require('jsonwebtoken')
 
-import dotenv from "dotenv"
 
-dotenv.config();
+
 
 interface token {
     token? : string,
@@ -14,12 +13,12 @@ interface token {
     error? : any
 }
 
-const key = process.env.SECRET_KEY;
 
-export function generateToken(user_id : string) : token {
+
+export function generateToken(user_id : string , role : string) : token {
     try {
-        console.log(key);
-        const token = jwt.sign({userId : user_id} , "ihweu9riu@^#*$RI$9ru8t 3o5973t");
+   
+        const token = jwt.sign({userId : user_id , role} , "ihweu9riu@^#*$RI$9ru8t 3o5973t");
         return {
             token : token,
             valid : true
