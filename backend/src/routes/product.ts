@@ -75,4 +75,33 @@ productRouter.post('/', isAdmin, upload.array('images'), async (req: Request, re
     }
 })
 
+productRouter.get('/' , async(req  : Request, res : Response ) => {
+    try {
+        const products = await Product.find({})
+        if(products.length == 0) {
+            res.status(402).json({
+                valid : false,
+                message : 'Cannot fetch products at the moment'
+            })
+            return
+        }
+        const products_arr  = products.map((item)=>{
+            return {
+                id : item._id,
+                name : item.product_name,
+                price : item.product_price,
+                stock : item.product_stock,
+            }
+        })
+        res.status(200).json({
+            valid : true,
+            products :  products_arr
+        })
+    } catch (error) {
+        res.status(500).json({
+            message : 'Something went wrong'
+        })
+    }
+})
+
 export default productRouter

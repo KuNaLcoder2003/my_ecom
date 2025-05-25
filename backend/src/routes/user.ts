@@ -4,6 +4,7 @@ import { generateToken } from "../functions/generateTokens";
 import { User } from "../db";
 import multer from "multer";
 import { uploadImage } from "../functions/cloudinary";
+import { isAdmin } from "../middlewares/isAdmin";
 const bcrypt = require('bcrypt')
 
 const storage = multer.memoryStorage();
@@ -165,6 +166,38 @@ userRouter.post('/signin', async (req : Request , res : Response) => {
             valid :true,
             token : token,
             user : user
+        })
+    } catch (error) {
+        console.log(error);
+        res.status(Status.ERROR).json({
+            message: 'Something went wrong',
+            error: error
+        })
+    }
+})
+
+userRouter.get('/admin' , isAdmin , async(req : any , res: Response)=>{
+    const userID = req.id;
+
+    try {
+        const user = await User.findOne({_id : userID})
+
+        if(!user) {
+            res.status(404).json({
+                valid : false,
+                message : 'User not found'
+            })
+            return
+        }
+        res.status(200).json({
+            valid : true,
+            user : {
+                id : user._id,
+                first_name : user.first_name,
+                last_name : user.last_name,
+                email : user.email,
+                avatar : user.avatar,
+            }
         })
     } catch (error) {
         console.log(error);

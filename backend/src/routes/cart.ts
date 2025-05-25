@@ -4,16 +4,16 @@ import { User, Product, Cart } from "../db";
 
 
 import mongoose from "mongoose";
-
-
-
-
 const cartRouter = express.Router();
 
 interface Product_desc{
     product_id : mongoose.Types.ObjectId ,
     product_quantity : number ,
    
+}
+
+interface Product_arr {
+    product_name : string , product_description : string , product_price : number , product_stock : number , _id : mongoose.Schema.Types.ObjectId
 }
 
 cartRouter.post('/' , async(req : Request , res : Response)=>{
