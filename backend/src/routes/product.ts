@@ -15,6 +15,7 @@ interface Product {
 const productRouter = express.Router();
 
 productRouter.post('/', isAdmin, upload.array('images'), async (req: Request, res: Response) => {
+    console.log(req.body)
     try {
         const {product_name , product_description , product_price , product_stock } = req.body as Product;
         if(!product_description || !product_name || !product_price || !product_stock) {

@@ -127,7 +127,7 @@ userRouter.post('/signup' , upload.single('avatar'), async (req: Request, res: R
 userRouter.post('/signin', async (req : Request , res : Response) => {
     const userCred = req.body as Credentials
     try {
-        if(!userCred.email || userCred.password){
+        if(!userCred.email || !userCred.password){
             res.status(400).json({
                 valid : false,
                 messsge : 'Please enter Email and Password'
@@ -144,12 +144,12 @@ userRouter.post('/signin', async (req : Request , res : Response) => {
             })
             return
         }
-        const matched = bcrypt.compareSync(userCred , user.password)
+        const matched = bcrypt.compareSync(userCred.password , user.password)
 
         if(!matched) {
             res.status(401).json({
                 message : 'Wrong password',
-                valid : true
+                valid : false
             })
             return
         }
@@ -160,12 +160,17 @@ userRouter.post('/signin', async (req : Request , res : Response) => {
                 valid : false,
                 message : "Error : " + token.error
             })
+            return;
         }
+
+        console.log(token);
+
+        
 
         res.status(200).json({
             valid :true,
-            token : token,
-            user : user
+            token : token.token,
+            role : user.role
         })
     } catch (error) {
         console.log(error);
