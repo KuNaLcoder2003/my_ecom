@@ -1,3 +1,4 @@
+import { text } from "express";
 import mongoose from "mongoose";
 
 mongoose.connect('mongodb+srv://kunal:kunal@cluster0.acncl.mongodb.net/');
@@ -52,8 +53,13 @@ const Product_Schema = new mongoose.Schema({
             type: String,
             required: true
         }
-    }]
+    }],
+    category : {
+        type : String,
+    }
 }, { timestamps: true })
+
+Product_Schema.index({product_name : 'text' , product_description : 'text'})
 
 const Orders_Schema = new mongoose.Schema({
     user_id: {
@@ -73,7 +79,8 @@ const Orders_Schema = new mongoose.Schema({
     amount: {
         type: Number,
         required: true
-    }
+    } , 
+    
 }, { timestamps: true })
 
 const Cart_Schema = new mongoose.Schema({
