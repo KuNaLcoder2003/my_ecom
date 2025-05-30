@@ -38,6 +38,7 @@ const Signin = ({setUser }) => {
                         setUser({isAdmin : true , isLoggedIn : true})
                         navigate('/admin')
                     } else {
+                         localStorage.setItem("role" , `User`)
                         setUser({ isAdmin : false , isLoggedIn : true})
                     }
                     

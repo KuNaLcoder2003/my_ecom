@@ -1,86 +1,117 @@
-import React from 'react'
+import { User2Icon, Menu, X, Flag, ShoppingCartIcon } from 'lucide-react';
+import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
+import { useDebounce } from '../hooks/useDebounce';
+import toast from 'react-hot-toast';
+import logo from "/assets/Assets/logo.png"
 
 
 
-const UserNavbar = ({isLoggedIn , setLoggedIn}) => {
-  const [isOpen, setIsOpen] = useState(false);
-
+const UserNavbar = ({ isLoggedIn, setLoggedIn }) => {
+  const [isOpen, setIsOpen] = React.useState(false);
+  
   const navigate = useNavigate();
-
 
   const links = [
     {
-        to : isLoggedIn ? '/cart' : '/signin',
-        title : 'cart'
-    } , 
+      to: isLoggedIn ? '' : '',
+      title: 'Shop'
+    },
     {
-        to : isLoggedIn ? '/account' : '/signin',
-        title : 'Account' 
-    }
-]
-  
+      to: '/',
+      title: 'Men'
+    },
+    {
+      to: '/',
+      title: 'Women'
+    },
+
+  ]
 
   return (
-    <div className="w-full shadow-lg rounded-lg px-6 py-4 bg-white">
-      {/* Top section */}
-      <div className="max-w-7xl mx-auto flex items-center justify-between">
-        {/* Left: Avatar & Greeting */}
-        <div className="flex items-center gap-4">
-          <img src={img} alt="User" className="w-10 h-10 rounded-full object-cover" />
-          <h2 className="text-xl lg:text-2xl font-bold">
-            Hello, <span>{userName}</span>
-          </h2>
+    <>
+
+      <div className='fixed w-[100vw] bg-zinc-100 p-4'>
+
+
+        <div className='flex items-center flex-wrap justify-between lg:flex-nowrap lg:justify-around '>
+          <div className='flex items-center gap-2'>
+            <img src={logo} />
+            <p className='text-2xl font-bold'>Shopper</p>
+          </div>
+
+          <div className='lg:hidden'>
+            <Menu onClick={() => setIsOpen(!isOpen)} />
+          </div>
+
+          {
+            isOpen && (
+              <div className='w-[90%]  m-auto flex flex-col items-center gap-4'>
+                <div className='flex flex-col lg:hidden items-center justify-center gap-4'>
+
+                  {
+                    links.map((link, index) => {
+                      return (
+                        <p key={index} className='text-xl font-semibold cursor-pointer'>{link.title}</p>
+                      )
+                    })
+                  }
+
+                </div>
+
+                {
+                  isLoggedIn ? <button className='block m-auto lg:hidden p-2 w-[50%] text-center bg-red-400 text-white font-semibold rounded-lg'>
+                    Logout
+                  </button>
+                    : <button className='block lg:hidden m-auto p-2 w-[50%] text-center bg-red-400 text-white font-semibold rounded-lg'>
+                      Login
+                    </button>
+                }
+
+              </div>
+            )
+          }
+
+          <div className='hidden lg:flex items-center gap-8'>
+
+            {
+              links.map((link, index) => {
+                return (
+                  <p key={index} className='text-xl font-semibold cursor-pointer'>{link.title}</p>
+                )
+              })
+            }
+
+          </div>
+
+          {
+            isLoggedIn ? <div className='hidden lg:flex items-center gap-4 w-[10%] '>
+              <ShoppingCartIcon onClick={()=>navigate('/cart')} className='cursor-pointer' />
+              <button className='hidden lg:block p-2 w-[100%] text-center bg-red-400 text-white font-semibold rounded-lg'>
+                Logout
+              </button>
+
+            </div>
+              : <div className='hidden lg:flex items-center gap-4 w-[10%]'>
+                <ShoppingCartIcon  className='cursor-pointer' onClick={()=>navigate('/signin')} />
+                <button onClick={()=>navigate('/signin')} className='hidden lg:block  p-2 w-[100%] text-center bg-red-400 text-white font-semibold rounded-lg'>
+                  Login
+                </button>
+
+              </div>
+          }
+
         </div>
 
-        {/* Desktop Nav Links */}
-        <div className="hidden lg:flex items-center gap-6">
-          {links.map((link, idx) => (
-            <p
-              onClick={()=>navigate(link.to)}
-              key={`${idx}_${link.title}`}
-              className="text-base font-medium hover:text-indigo-600 transition-colors cursor-pointer"
-            >
-              {link.title}
-            </p>
-          ))}
-          {isLoggedIn ?  (
-            <button onClick={()=>{setLoggedIn() ; localStorage.removeItem('token') ; navigate('/')}} className="ml-4 bg-indigo-600 hover:bg-indigo-700 px-4 py-2 rounded-lg text-white font-semibold transition-all">
-              Logout
-            </button> 
-          ) : <button onClick={()=>{ navigate('/signin')}} className="ml-4 bg-indigo-600 hover:bg-indigo-700 px-4 py-2 rounded-lg text-white font-semibold transition-all">
-              Login
-            </button> }
+        <div>
+
         </div>
 
-        {/* Mobile menu icon */}
-        <div className="lg:hidden">
-          <button onClick={() => setIsOpen(!isOpen)} aria-label="Toggle Menu">
-            {isOpen ? <X size={24} /> : <Menu size={24} />}
-          </button>
-        </div>
+
+
       </div>
 
-      {/* Mobile Dropdown */}
-      {isOpen && (
-        <div className="mt-4 flex flex-col gap-3 lg:hidden transition-all">
-          {links.map((link, idx) => (
-            <a
-              href={link.to}
-              key={`${idx}_${link.title}`}
-              className="text-base font-medium hover:text-indigo-600 transition-colors"
-            >
-              {link.title}
-            </a>
-          ))}
-          {isLoggedIn && (
-            <button className="w-fit mt-2 bg-indigo-600 hover:bg-indigo-700 px-4 py-2 rounded-lg text-white font-semibold transition-all">
-              Logout
-            </button>
-          )}
-        </div>
-      )}
-    </div>
+    </>
   )
 }
 

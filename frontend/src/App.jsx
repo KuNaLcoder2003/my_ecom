@@ -8,6 +8,8 @@ import Home from './pages/Home'
 import Landing from './pages/Landing'
 import Signin from './pages/Signin'
 import Signup from './pages/Signup'
+import ProductPage from './pages/ProductPage'
+import Cart from './pages/Cart'
 
 function App() {
 
@@ -43,20 +45,17 @@ function App() {
   }, [])
 
 
-  function setIsLoggedInFalse() {
-    setUser({
-      ...user , isLoggedIn : false
-    })
-  }
 
 
   return (
     <Routes>
-      <Route path='/' element={user.isLoggedIn ? <Home/> : <Landing/> } />
-      <Route path='/signin' element={user.isLoggedIn ? <Home/> : <Signin setUser={setUser} />} />
+      <Route path='/' element={<Landing isLoggedIn={user.isLoggedIn} setIsLoggedIn={setUser} /> } />
+      <Route path='/signin' element={user.isLoggedIn ? <Landing isLoggedIn={user.isLoggedIn} setIsLoggedIn={setUser} /> : <Signin setUser={setUser} />} />
       <Route path='/signup' element={user.isLoggedIn ? <Home/> : <Signup/>} />
       <Route path='/admin' element={user.isAdmin ? <Admin /> : <Signin setUser={setUser} /> } />
       <Route path='/admin/upload' element={user.isAdmin ? <Upload /> : <Signin setUser={setUser} />} />
+      <Route path='/product/:productId' element={<ProductPage isLoggedIn={user.isLoggedIn} />} />
+      <Route path='/cart' element={<Cart isLoggedIn={user.isLoggedIn} />} />
     </Routes>
   )
 }

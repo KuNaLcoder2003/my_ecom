@@ -10,6 +10,7 @@ const Upload = () => {
         product_description: '',
         product_price: 0,
         product_stock: '',
+        category : '',
         files: []
     })
     const handleFiles = (e) => {
@@ -33,6 +34,7 @@ const Upload = () => {
         formData.append('images', productData.files[1])
         formData.append('images', productData.files[2])
         formData.append('images', productData.files[3])
+        formData.append('category' , productData.category)
 
 
 
@@ -51,7 +53,8 @@ const Upload = () => {
                         product_description: '',
                         product_price: 0,
                         product_stock: '',
-                        files: []
+                        files: [],
+                        category : ''
                     })
                     toast.success(data.message)
                 } else {
@@ -73,7 +76,7 @@ const Upload = () => {
                         <Navbar isLoggedIn={true} userName={`${admin.first_name} ${admin.last_name}`} img={admin.avatar} />
                         <Toaster/>
 
-                        <form className='max-w-7xl shadow-lg rounded-lg p-4' onSubmit={handleFormSubmit}>
+                        <form className='max-w-7xl shadow-lg rounded-lg p-4 m-auto' onSubmit={handleFormSubmit}>
 
                             <div className='flex flex-col gap-8 h-auto items-center justify-center w-[100%]'>
 
@@ -83,6 +86,13 @@ const Upload = () => {
                                         value={productData.product_name}
                                         type="text"
                                         placeholder="Enter product name"
+                                        className="w-full sm:w-1/2 md:w-full lg:w-1/4 xl:w-1/5 px-4 py-2 rounded-lg text-zinc-600 placeholder:text-zinc-400 shadow-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                                    />
+                                    <input
+                                        onChange={(e) => setProductData({ ...productData, category: e.target.value })}
+                                        value={productData.category}
+                                        type="text"
+                                        placeholder="Enter product catrgory"
                                         className="w-full sm:w-1/2 md:w-full lg:w-1/4 xl:w-1/5 px-4 py-2 rounded-lg text-zinc-600 placeholder:text-zinc-400 shadow-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
                                     />
 

@@ -46,7 +46,7 @@ const Navbar = ({ isLoggedIn, userName = 'Kunal Singh', img }) => {
             </p>
           ))}
           {isLoggedIn && (
-            <button className="ml-4 bg-indigo-600 hover:bg-indigo-700 px-4 py-2 rounded-lg text-white font-semibold transition-all">
+            <button onClick={()=>{navigate('/') ; localStorage.clear()}} className="ml-4 bg-indigo-600 hover:bg-indigo-700 px-4 py-2 rounded-lg text-white font-semibold transition-all">
               Logout
             </button>
           )}
@@ -73,7 +73,7 @@ const Navbar = ({ isLoggedIn, userName = 'Kunal Singh', img }) => {
             </a>
           ))}
           {isLoggedIn && (
-            <button className="w-fit mt-2 bg-indigo-600 hover:bg-indigo-700 px-4 py-2 rounded-lg text-white font-semibold transition-all">
+            <button onClick={()=>{navigate('/') ; localStorage.clear()  }} className="w-fit mt-2 bg-indigo-600 hover:bg-indigo-700 px-4 py-2 rounded-lg text-white font-semibold transition-all">
               Logout
             </button>
           )}
